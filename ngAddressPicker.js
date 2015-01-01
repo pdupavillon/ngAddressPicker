@@ -2,10 +2,10 @@ angular.module('ngAddressPicker', [])
   .factory('googleService', ['$http', '$q',
     function($http, $q) {
       var api_url = 'http://maps.googleapis.com/maps/api/geocode/json';
-      var buildUrl = function(search, options){
+      var buildUrl = function(search, options) {
         var url = api_url + '?address=' + search;
-        if(options.country){
-          url += '&components=country:'+options.country.toUpperCase();
+        if (options.country) {
+          url += '&components=country:' + options.country.toUpperCase();
         }
         return url;
       };
@@ -41,7 +41,7 @@ angular.module('ngAddressPicker', [])
           return results;
         },
         findByAddress: function(address, options) {
-          var url = buildUrl(address,options);
+          var url = buildUrl(address, options);
           var promised = $q.defer();
           options = options || {};
           $http.get(url)
@@ -67,7 +67,14 @@ angular.module('ngAddressPicker', [])
         link: function(scope, elem, attr, ctrl) {
           elem.bind('keyup', function() {
             scope[attr.resultModel] = null;
-            googleService.findByAddress(elem.val(),{country:attr.country})
+            if (elem.val().trim().length === 0) {
+              scope.$apply();
+              return null;
+            }
+
+            googleService.findByAddress(elem.val(), {
+              country: attr.country
+            })
               .then(googleService.cleanAddressResults)
               .then(function(result) {
                 scope[attr.resultModel] = result;
@@ -76,4 +83,4 @@ angular.module('ngAddressPicker', [])
         }
       };
     }
-  ])
+  ]);
