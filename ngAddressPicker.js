@@ -14,6 +14,7 @@ angular.module('ngAddressPicker', [])
           var results = [];
           var comp = ['country',
             'route',
+            'premise',
             'street_number',
             'postal_code',
             'locality',
